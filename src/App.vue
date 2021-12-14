@@ -1,7 +1,7 @@
 <template>
   <div class="app">
-    <!-- 会計履歴を表示するスペース（ボタンを押すと表示）
-    <div class="subTab" id="subTab">
+    <!-- 会計履歴を表示するスペース（ボタンを押すと表示） -->
+    <div class="subTab" id="subTab" v-bind:style="{display:nowStyle}">
       <button class="closeButton">×</button>
       <div class="subTitleSpace">
         <h2 class="subTitle">会計履歴</h2>
@@ -22,12 +22,13 @@
           </tbody>
         </table>
       </div>
-    </div> -->
+    </div>
 
     <!-- 会計処理を行うスペース（常時表示） -->
     <div class="mainTab" id="mainTab">
       <div class="titleBar">
         <h1 class="titleText">Smart-Cashier</h1>
+        <button @click="openHistory">会計履歴</button>
       </div>
       <div class="previewScreen">
         <div class="previewContents">
@@ -37,6 +38,7 @@
         </div>
       </div>
       <button class="cashierButton" @click="cashier">確定</button>
+
       <div class="menuContents">
         <div class="itemList">
           <table>
@@ -73,6 +75,7 @@ export default {
     let outOf=ref(0)
     let change=ref(0)
     let amount=ref(0)
+    let nowStyle = ref("none")
     let dateObj = new Date()
     let now_date = ref(dateObj.getFullYear() + '年' + 
        ('00' + (dateObj.getMonth() + 1)).slice(-2) + '月' + 
@@ -85,9 +88,16 @@ export default {
       {name:"やきそば(ソース)",price:650,remarks:"！オイスターソースには大豆が含まれています！",amount:0}
     ])
 
+    let displayStyle = ref([
+      {D_style:"none"},
+      {D_style:"block"}
+    ])
+
     let total_history = ref([
       {"2020/12/13" : "1500"},
     ])
+
+    let subTabCtrl = ref(document.getElementById("subTab"))
 
     const addItem=(i)=>{
       totalPrice.value = totalPrice.value + i.price;  
@@ -103,8 +113,17 @@ export default {
       change.value =  outOf.value - totalPrice.value;
       total_history.value.date = now_date.value;
       total_history.value.earning = totalPrice.value;
-      console.log(now_date.value)
-      
+      console.log(now_date.value)     
+    }
+
+    const openHistory=()=>{
+      if(nowStyle.value == "block"){
+        nowStyle.value="none";
+        console.log("非表示")
+      }else{
+        nowStyle.value="block";
+        console.log("表示")
+      }
     }
 
 
@@ -116,9 +135,13 @@ export default {
       total_history,
       amount,
       now_date,
+      subTabCtrl,
+      displayStyle,
+      nowStyle,
       addItem,
       reduceItem,
       cashier,
+      openHistory,
     }
   }
 
@@ -154,7 +177,7 @@ export default {
 }
 
 .cashierButton{
-  display:inline;
+  display:inline-block;
 
 }
 
@@ -170,21 +193,22 @@ export default {
   margin-left:10px;
   margin-top:10px;
   margin-bottom:10px;
-  position:fixed;
   background-color:white;
+  display:inline-block;
 }
 
 .previewContents{
   padding-left:5px;
   padding-top:5px;
   padding-bottom:5px;
+  display:inline-block;
 }
 
 .menuContents{
   border:solid;
   border-radius:10px;
   margin-left:10px;
-  margin-top:140px;
+  margin-top:40px;
 }
 
 .itemAmount{
