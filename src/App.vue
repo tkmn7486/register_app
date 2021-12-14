@@ -16,8 +16,8 @@
           </thead>
           <tbody>
             <tr v-for="history in total_history" :key="history.id">
-              <td>{{history}}</td>
-              <td>{{history}}円</td>
+              <td>{{history.date}}</td>
+              <td>{{history.price}}円</td>
             </tr>
           </tbody>
         </table>
@@ -28,7 +28,7 @@
     <div class="mainTab" id="mainTab">
       <div class="titleBar">
         <h1 class="titleText">Smart-Cashier</h1>
-        <button @click="openHistory">会計履歴</button>
+        <button class="historyButton" @click="openHistory">会計履歴</button>
       </div>
       <div class="previewScreen">
         <div class="previewContents">
@@ -55,7 +55,7 @@
                 <td>{{item.name}}</td>
                 <td>{{item.price}}円</td>
                 <td>{{item.remarks}}</td>
-                <td>{{item.amount}} 個 <button @click="reduceItem(item)">-</button><button @click="addItem(item)">+</button></td>
+                <td>{{item.amount}} 個 <button class="reduceButton" @click="reduceItem(item)">−</button><button class="addButton" @click="addItem(item)">+</button></td>
               </tr>
             </tbody>
           </table>
@@ -93,9 +93,7 @@ export default {
       {D_style:"block"}
     ])
 
-    let total_history = ref([
-      {"2020/12/13" : "1500"},
-    ])
+    let total_history = ref([])
 
     let subTabCtrl = ref(document.getElementById("subTab"))
 
@@ -111,9 +109,8 @@ export default {
 
     const cashier=()=>{
       change.value =  outOf.value - totalPrice.value;
-      total_history.value.date = now_date.value;
-      total_history.value.earning = totalPrice.value;
-      console.log(now_date.value)     
+      total_history.value.push({date:now_date.value, price:totalPrice.value})
+      console.log(now_date.value)
     }
 
     const openHistory=()=>{
@@ -153,6 +150,10 @@ export default {
   margin:0;
 }
 
+html{
+  background-color:rgb(250, 224, 177)
+}
+
 .subTab{
   background-color:rgb(247, 189, 82);
   position:fixed;
@@ -179,11 +180,11 @@ export default {
 
 .cashierButton{
   display:inline-block;
-
 }
 
-.historyButtonButton{
-  display:inline;
+.historyButton{
+  border:solid white;
+  border-radius:10px;
 }
 
 .previewScreen{
@@ -210,6 +211,7 @@ export default {
   border-radius:10px;
   margin-left:10px;
   margin-top:40px;
+  background-color:white;
 }
 
 .itemAmount{
@@ -246,13 +248,36 @@ button{
 }
 
 .cashierButton{
-  position:fixed;
   margin-top:10px;
   left:320px;
   background-color:rgba(255, 175, 27, 0.576);
   border:solid;
   border-radius:10px;
   font-size:30px;
+}
+
+.reduceButton{
+  border:solid #6ea5f8;
+  border-radius:30px;
+  background-color:#8dbafd;
+  width:30px;
+  height:30px;
+  text-align:center;
+  font-size:20px;
+  font-family:fantasy;
+  color:white;
+}
+
+.addButton{
+  border:solid #f87e6e;
+  border-radius:30px;
+  background-color:#fda78d;
+  width:30px;
+  height:30px;
+  text-align:center;
+  font-size:20px;
+  font-family:fantasy;
+  color:white;
 }
 
 </style>
