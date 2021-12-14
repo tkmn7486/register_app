@@ -2,7 +2,7 @@
   <div class="app">
     <!-- 会計履歴を表示するスペース（ボタンを押すと表示） -->
     <div class="subTab" id="subTab" v-bind:style="{display:nowStyle}">
-      <button class="closeButton">×</button>
+      <button class="closeButton" @click="openHistory">×</button>
       <div class="subTitleSpace">
         <h2 class="subTitle">会計履歴</h2>
       </div>
@@ -156,6 +156,7 @@ export default {
 .subTab{
   background-color:rgb(247, 189, 82);
   position:fixed;
+  z-index:5px;
   top:0;
   right:0px;
   width:400px;
