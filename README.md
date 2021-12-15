@@ -1,24 +1,6 @@
-# cashierapp
+<h2>アプリ概要</h2>
+<h4>「どこでも・無料で使えるレジアプリ」をコンセプトに開発中のWEBアプリケーションです。</h4>
+<p>言語：JavaScript(Vue.js),HTML,CSS<p>
+<p>開発開始日：2021年12月</p>
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+<h2>このアプリについて</h2>
