@@ -169,8 +169,15 @@ export default {
       outOf.value = 0
       change.value = 0
       cashierCount.value++
+      resetAmount();
 
       nowCheckTabStyle.value = "none"
+    }
+
+    const resetAmount=()=>{
+      for(let i=0; i<item_list.value.length; i++){
+        item_list.value[i].amount = 0;
+      }
     }
 
     const returnButton=()=>{
@@ -205,6 +212,7 @@ export default {
       cashier,
       openHistory,
       getDate,
+      resetAmount,
       // getBoughtItems,
       checkButton,
       returnButton,
