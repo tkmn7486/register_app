@@ -12,12 +12,14 @@
             <tr>
               <th>時間帯</th>
               <th>金額</th>
+              <th>内訳</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="history in total_history" :key="history.id">
               <td>{{history.date}}</td>
               <td>{{history.price}}円</td>
+              <td>{{history.detail}}</td>
             </tr>
           </tbody>
         </table>
@@ -94,25 +96,14 @@ export default {
     let cashierCount=ref(0)
     let nowSubTabStyle = ref("none")
     let nowCheckTabStyle =ref("none")
-    // let now_date=ref()
-
-    // let boughtList = ref([])
-    // let dateObj = new Date()
-
-    //時間を表示する変数
-    // let now_date = ref(dateObj.getFullYear() + '年' + 
-    //    ('00' + (dateObj.getMonth() + 1)).slice(-2) + '月' + 
-    //    ('00' + dateObj.getDate()).slice(-2) + '日' + 
-    //    ('00' + dateObj.getHours()).slice(-2) + '時' + 
-    //    ('00' + dateObj.getMinutes()).slice(-2) + '分');
 
     let item_list=ref([
       {name:"やきそば(塩)",price:600,remarks:"",amount:0},
       {name:"やきそば(ソース)",price:650,remarks:"！オイスターソースには大豆が含まれています！",amount:0}
     ])
 
-    let cartItemList=ref([
-    ])
+    // let cartItemList=ref([
+    // ])
 
     let displayStyle = ref([
       {D_style:"none"},
@@ -126,13 +117,13 @@ export default {
     const addItem=(i)=>{
       totalPrice.value = totalPrice.value + i.price;
       i.amount++
-      cartItemList.value.push(i.name)
+      // cartItemList.value.push(i.name)
     }
 
     const reduceItem=(i)=>{
       totalPrice.value = totalPrice.value - i.price;
       i.amount--
-      cartItemList.value.push(i.price)
+      // cartItemList.value.push(i.price)
     }
 
     const cashier=()=>{
@@ -164,7 +155,7 @@ export default {
       let dateObj = new Date()
       console.log("dateObj",dateObj)
       let now_date = getDate(dateObj);
-      total_history.value.push({date: now_date, price: totalPrice.value})
+      total_history.value.push({date: now_date, price: totalPrice.value, detail:getDetail()})
       totalPrice.value = 0
       outOf.value = 0
       change.value = 0
@@ -172,6 +163,18 @@ export default {
       resetAmount();
 
       nowCheckTabStyle.value = "none"
+    }
+
+    const getDetail=()=>{
+      let bought_items = ""
+      for(let i=0; i<item_list.value.length; i++){
+        if(item_list.value[i].amount == 0){
+          break;
+        }else{
+          bought_items = bought_items + item_list.value[i].name + "×" + item_list.value[i].amount + "/";
+        }
+      }
+      return bought_items;
     }
 
     const resetAmount=()=>{
@@ -184,13 +187,6 @@ export default {
       nowCheckTabStyle.value = "none"
     }
 
-    // const getBoughtItems=()=>{
-    //   for(let co = 0; co < cartItemList.value.length; co++){
-    //     boughtList.value.push(cartItemList.value.name[co])
-    //   }
-    // }
-
-
     return{
       totalPrice,
       outOf,
@@ -198,24 +194,20 @@ export default {
       item_list,
       total_history,
       amount,
-      // now_date,
       subTabCtrl,
       displayStyle,
       nowSubTabStyle,
       nowCheckTabStyle,
-      cartItemList,
       cashierCount,
-      // now_date,
-      // boughtList,
       addItem,
       reduceItem,
       cashier,
       openHistory,
       getDate,
       resetAmount,
-      // getBoughtItems,
       checkButton,
       returnButton,
+      getDetail,
     }
   }
 
