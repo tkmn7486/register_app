@@ -94,13 +94,17 @@ export default {
     let cashierCount=ref(0)
     let nowSubTabStyle = ref("none")
     let nowCheckTabStyle =ref("none")
+    // let now_date=ref()
+
     // let boughtList = ref([])
-    let dateObj = new Date()
-    let now_date = ref(dateObj.getFullYear() + '年' + 
-       ('00' + (dateObj.getMonth() + 1)).slice(-2) + '月' + 
-       ('00' + dateObj.getDate()).slice(-2) + '日' + 
-       ('00' + dateObj.getHours()).slice(-2) + '時' + 
-       ('00' + dateObj.getMinutes()).slice(-2) + '分');
+    // let dateObj = new Date()
+
+    //時間を表示する変数
+    // let now_date = ref(dateObj.getFullYear() + '年' + 
+    //    ('00' + (dateObj.getMonth() + 1)).slice(-2) + '月' + 
+    //    ('00' + dateObj.getDate()).slice(-2) + '日' + 
+    //    ('00' + dateObj.getHours()).slice(-2) + '時' + 
+    //    ('00' + dateObj.getMinutes()).slice(-2) + '分');
 
     let item_list=ref([
       {name:"やきそば(塩)",price:600,remarks:"",amount:0},
@@ -147,9 +151,20 @@ export default {
     }
 
 // 会計処理
+    const getDate=(dateObj)=>{
+      let now_date = dateObj.getFullYear() + '年' + 
+      ('00' + (dateObj.getMonth() + 1)).slice(-2) + '月' + 
+      ('00' + dateObj.getDate()).slice(-2) + '日' + 
+      ('00' + dateObj.getHours()).slice(-2) + '時' + 
+      ('00' + dateObj.getMinutes()).slice(-2) + '分';
+      return now_date;
+    }
+
     const checkButton=()=>{
-      total_history.value.push({date: now_date.value, price: totalPrice.value})
-      console.log(now_date.value)
+      let dateObj = new Date()
+      console.log("dateObj",dateObj)
+      let now_date = getDate(dateObj);
+      total_history.value.push({date: now_date, price: totalPrice.value})
       totalPrice.value = 0
       outOf.value = 0
       change.value = 0
@@ -176,18 +191,20 @@ export default {
       item_list,
       total_history,
       amount,
-      now_date,
+      // now_date,
       subTabCtrl,
       displayStyle,
       nowSubTabStyle,
       nowCheckTabStyle,
       cartItemList,
       cashierCount,
+      // now_date,
       // boughtList,
       addItem,
       reduceItem,
       cashier,
       openHistory,
+      getDate,
       // getBoughtItems,
       checkButton,
       returnButton,
