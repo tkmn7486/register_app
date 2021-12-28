@@ -23,6 +23,7 @@
             </tr>
           </tbody>
         </table>
+        <button id="download" type="button" @click="downloadCSV">Download CSV</button>
       </div>
     </div>
 
@@ -47,12 +48,12 @@
       <div class="titleBar">
         <h1 class="titleText">Smart-Cashier</h1>
         <button class="historyButton" @click="openHistory">会計履歴(会計総数：{{cashierCount}}件)</button>
+        <input @change="fileChange" type="file" id="file_input_expense" name="file_input_expense">
       </div>
       <div class="previewScreen">
         <div class="previewContents">
           <h2>合計金額：{{totalPrice}}円</h2>
           <h3>お預かり：<input class="outOfForm" v-model="outOf">円</h3>
-          <!-- <h3>お釣り：<p class="changeText">{{change}}円</p></h3> -->
         </div>
       </div>
       <button class="cashierButton" @click="cashier">確定</button>
@@ -77,8 +78,6 @@
               </tr>
             </tbody>
           </table>
-          <!-- ↓CSVボタン -->
-          <button id="download" type="button" @click="downloadCSV">Download CSV</button>
         </div>
       </div>
     </div>
@@ -100,8 +99,8 @@ export default {
     let nowCheckTabStyle =ref("none")
 
     let item_list=ref([
-      {name:"やきそば(塩)",price:600,remarks:"",amount:0},
-      {name:"やきそば(ソース)",price:650,remarks:"！オイスターソースには大豆が含まれています！",amount:0}
+      // {name:"やきそば(塩)",price:600,remarks:"",amount:0},
+      // {name:"やきそば(ソース)",price:650,remarks:"！オイスターソースには大豆が含まれています！",amount:0}
     ])
 
     // let cartItemList=ref([
@@ -143,11 +142,26 @@ export default {
       }
     }
 
+// CSV関連
+    const json2csv=(json)=> {
+        var header = Object.keys(json[0]).join(',') + "\n";
+
+        var body = json.map(function(d){
+            return Object.keys(d).map(function(key) {
+                return d[key];
+            }).join(',');
+        }).join("\n");
+
+        return header + body;
+    }
+
     const downloadCSV=()=> {
         //ダウンロードするCSVファイル名を指定する
-        const filename = "download.csv";
+        let dateObj = new Date()
+        let now_date = getDate(dateObj);
+        const filename = now_date+".csv";
         //CSVデータ
-        const data = "テスト, テスト, テスト\nテスト, テスト, テスト";
+        const data = json2csv(total_history.value);
         //BOMを付与する（Excelでの文字化け対策）
         const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
         //Blobでデータを作成する
@@ -173,6 +187,30 @@ export default {
         }
     }
 
+    const fileChange=(e)=> {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      // const workers = [];
+
+      const loadFunc = () => {
+        const lines = reader.result.split("\n");
+        lines.forEach(element => {
+          const workerData = element.split(",");
+          if (workerData.length != 3) return;
+          const worker = {
+            code: workerData[0],
+            name: workerData[1],
+            workerType: workerData[2]
+          };
+          item_list.value.push(worker);
+        });
+        // this.workers = workers;
+      };
+      reader.onload = loadFunc;
+      reader.readAsBinaryString(file);
+      console.log("item_list:",item_list.value)
+    }
+
 // 会計処理
     const getDate=(dateObj)=>{
       let now_date = dateObj.getFullYear() + '年' + 
@@ -185,7 +223,6 @@ export default {
 
     const checkButton=()=>{
       let dateObj = new Date()
-      console.log("dateObj",dateObj)
       let now_date = getDate(dateObj);
       total_history.value.push({date: now_date, price: totalPrice.value, detail:getDetail()})
       totalPrice.value = 0
@@ -241,6 +278,8 @@ export default {
       returnButton,
       getDetail,
       downloadCSV,
+      json2csv,
+      fileChange,
     }
   }
 
