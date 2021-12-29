@@ -117,13 +117,13 @@ export default {
 
     const addItem=(i)=>{
       totalPrice.value = totalPrice.value + Number(i.price);
-      i.amount++
+      i.amount=Number(i.amount)+1;
       // cartItemList.value.push(i.name)
     }
 
     const reduceItem=(i)=>{
       totalPrice.value = totalPrice.value - Number(i.price);
-      i.amount--
+      i.amount=Number(i.amount)-1
       // cartItemList.value.push(i.price)
     }
 
@@ -203,10 +203,12 @@ export default {
           const CSV = {
             name: CSV_data[0],
             price: CSV_data[1],
-            remarks: CSV_data[2]
+            remarks: CSV_data[2],
+            amount: CSV_data[3]
           };
 
           item_list.value.push(CSV);
+          // item_list.value.delete(1,3)
           console.log("CSV",CSV)
         });
         // this.CSVs = CSVs;

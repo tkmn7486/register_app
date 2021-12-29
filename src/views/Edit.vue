@@ -2,7 +2,33 @@
   <div class="Edit">
     <div class="mainTab" id="mainTab">
       <div class="titleBar">
-        <h1>メニューデータ作成</h1>
+        <h1 class="title">メニューデータ作成</h1>
+      </div>
+      <div class="inputForm">
+        <div class="formBody">
+          <div class="formContents">
+            <h2>>>新規追加</h2>
+            <h2>商品名:<input class="input_menu" v-model="new_menu_name"></h2>
+            <h2>金額:<input class="input_menu" v-model="new_menu_price"></h2>
+            <h2>詳細・備考:<input class="input_menu" v-model="new_menu_remarks"></h2>
+            <button @click="addNewMenu">追加</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="contents">
+        <table class="new_menus">
+          <tr>
+            <th class="new_header">商品名</th>
+            <th class="new_header">価格</th>
+            <th class="new_header">詳細・備考</th>
+          </tr>
+          <tr v-for="new_menu in new_menus" :key="new_menu.id">
+            <td>{{new_menu.name}}</td>
+            <td>{{new_menu.price}}円</td>
+            <td>{{new_menu.remarks}}</td>
+          </tr>
+        </table>
       </div>
     </div>
       <button @click="downloadCSV">メニューを保存して出力</button>
@@ -15,9 +41,30 @@ import {ref} from 'vue'
 export default{
     name:'Edit',
     setup(){
-        let new_menu = ref([
-            {name:"パン",price:500,spetial:"おいしい"}
+        let new_menus = ref([
         ])
+        let new_menu_name = ref()
+        let new_menu_price = ref()
+        let new_menu_remarks = ref()
+
+      const addNewMenu=()=>{
+        if(new_menu_remarks.value ==""){
+          new_menu_remarks.value="---";
+          new_menus.value.push(
+              {name:new_menu_name.value, 
+              price:new_menu_price.value, 
+              remarks:new_menu_remarks.value, 
+              amount:0})
+          console.log(new_menus.value)
+        }else{
+          new_menus.value.push({
+              name:new_menu_name.value, 
+              price:new_menu_price.value, 
+              remarks:new_menu_remarks.value, 
+              amount:0}) 
+          console.log(new_menus.value)
+        }
+      }
 
 // CSV出力
       const json2csv=(json)=> {
@@ -36,7 +83,7 @@ export default{
         //ダウンロードするCSVファイル名を指定する
         const filename = "new_menu.csv";
         //CSVデータ
-        const data = json2csv(new_menu.value);
+        const data = json2csv(new_menus.value);
         //BOMを付与する（Excelでの文字化け対策）
         const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
         //Blobでデータを作成する
@@ -63,7 +110,11 @@ export default{
       }
 
         return{
-            new_menu,
+            new_menus,
+            new_menu_name,
+            new_menu_price,
+            new_menu_remarks,
+            addNewMenu,
             json2csv,
             downloadCSV,
         }
@@ -71,3 +122,47 @@ export default{
 }
 
 </script>
+
+<style>
+.title{
+    color:white;
+    padding:5px;
+}
+
+.contents{
+    top: 65px;
+    right:20px;
+    position:absolute;
+}
+
+.new_menus{
+    border:solid;
+    border-radius:10px;
+    background-color:white;
+    padding:10px;
+}
+
+.new_header{
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.formBody{
+    display:inline-block;
+    margin-top:10px;
+    margin-left:10px;
+    border:solid;
+    border-radius:10px;
+    background-color:white;
+    width:50%;
+}
+
+.formContents{
+    padding:10px;
+}
+
+.input_menu{
+    width:300px;
+    height:30px;
+}
+</style>
