@@ -197,7 +197,8 @@ export default {
 
       const loadFunc = () => {
         const lines = reader.result.split("\n");
-        lines.forEach(element => {
+        lines.forEach((element, index) => {
+          if( index === 0 ){ return; }
           const CSV_data = element.split(",");
           // if (CSV_data.length != 3) return;
           const CSV = {
@@ -208,6 +209,8 @@ export default {
           };
 
           item_list.value.push(CSV);
+          // item_list.value = item_list.value.shift;
+          console.log(item_list.value[0])
           // item_list.value.delete(1,3)
           console.log("CSV",CSV)
         });
