@@ -31,7 +31,7 @@
         </table>
       </div>
     </div>
-      <button @click="downloadCSV">メニューを保存して出力</button>
+      <button class="menu_save_button" @click="downloadCSV">メニューを保存して出力</button>
   </div>
 </template>
 
@@ -164,5 +164,13 @@ export default{
 .input_menu{
     width:300px;
     height:30px;
+}
+
+.menu_save_button{
+  margin-top:10px;
+  margin-left:10px;
+  border:solid 3px;
+  border-radius:5px;
+  background-color:white;
 }
 </style>
